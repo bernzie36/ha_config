@@ -1,0 +1,50 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+# http:
+#   base_url: example.duckdns.org:8123
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+#BlueTooth Device Tracker
+device_tracker:
+  - platform: bluetooth_tracker
+
+# Example configuration.yaml entry
+notify:
+  - name: slack
+    platform: slack
+    api_key: !secret slack_api_key
+    default_channel: !secret slack_automation_channel
+
+# Dark Mode Them
+frontend:
+  themes:
+    Google Dark Theme:
+      app-header-background-color: "#171717"
+      app-header-text-color: "#BDC1C6"
+      # .. rest of theme here
+    Google Light Theme:
+      app-header-background-color: "#F8F8F8"
+      app-header-text-color: "#424242"
+      # .. rest of theme here
+
+binary_sensor:
+    - platform: template
+      sensors:
+        #Custom Template for Kitchen Water Sensor
+        kitchen_water_sensor:
+          friendly_name: "Kitchen Water Sensor"
+          device_class: moisture
+          value_template: >-
+            {{ is_state('sensor.kitchen_water_sensor_flood', '2')
+               or is_state('sensor.kitchen_water_sensor_flood_2', '2') }}

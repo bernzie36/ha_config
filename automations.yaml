@@ -1,0 +1,49 @@
+#Window Binary Sensor
+- id: '1573535731635'
+  alias: Send Slack notification when window opens
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.bedroom_window_sensor_binary
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: device_tracker.pixel_2
+    state: not_home
+  action:
+  - data_template:
+      message: The bedroom window has been opened
+    service: notify.slack
+    
+# Kitchen Water Sensor
+- id: '1600411459418'
+  alias: Send Slack notification when kitchen water sensor triggers
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.kitchen_water_sensor
+    from: 'off'
+    platform: state
+    to: 'on'
+  action:
+  - data_template:
+      message: The kitchen water sensor was triggered
+    service: notify.slack
+    
+#Bathroom Multisensor
+- id: '1605254785763'
+  alias: Send Slack messsage when motion is detected
+  description: ''
+  trigger:
+  - entity_id: sensor.bathroom_multisensor_burglar
+    from: '0'
+    platform: state
+    to: '8'
+  condition:
+  - condition: state
+    entity_id: device_tracker.pixel_2
+    state: not_home
+  action:
+  - data:
+      message: The bedroom motion sensor has been triggered
+    service: notify.slack
